@@ -5,10 +5,10 @@ const currentFolderPath = path.join(__dirname, 'files');
 const newFolderPath = path.join(__dirname, 'files-copy');
 
 const copyDir = async () => {
-  const dir = async () => {
+  const folderExists = async () => {
 
     try {
-      await fs.stat(path);
+      await fs.stat(newFolderPath);
       return true; // folder exists
     } catch (err) {
 
@@ -18,7 +18,7 @@ const copyDir = async () => {
     }
   };
 
-  if (dir) {
+  if (await folderExists()) {
     await fs.rm(newFolderPath, { recursive: true, force: true });
   }
 
