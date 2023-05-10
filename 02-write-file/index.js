@@ -1,31 +1,28 @@
 const path = require('path');
-const readline = require('readline');
 const fs = require('fs');
 
-console.log ('Hello!');
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+console.log('Hello!');
 
 const filePath = path.join(__dirname, 'text.txt');
 const fileStream = fs.createWriteStream(filePath);
 
-rl.setPrompt('Enter text to write to file: ');
-rl.prompt();
+process.stdin.setEncoding('utf8');
+process.stdin.resume();
 
-rl.on('line', (input) => {
-  if (input.toLowerCase() === 'exit') {
+console.log('Enter text to write to file: ');
+
+process.stdin.on('data', (input) => {
+  if (input.trim().toLowerCase() === 'exit') {
     console.log('Goodbye!');
-    rl.close();
+    process.exit();
   } else {
-    fileStream.write(input + '\n');
-    console.log(`Text saved: ${input}`);
-    rl.prompt();
+    fileStream.write(input);
+    console.log(`Text saved: ${input.trim()}`);
   }
 });
 
-rl.on('close', () => {
+process.on('SIGINT', () => {
+  console.log('\nGood Bye!');
   fileStream.end();
-});
+  process.exit();
+  });
